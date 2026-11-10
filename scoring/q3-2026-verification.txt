@@ -1,0 +1,91 @@
+1. Locked and supporting workbooks (SHA-256 against the Releases / README)
+  [PASS] monday_q3_call.xlsx 49463d1fbb67… == 49463d1fbb67…
+  [PASS] monday_plan.xlsx 125af68742c9… == 125af68742c9…
+  [PASS] monday_sourcebook.xlsx 50c1c3fc6a63… == 50c1c3fc6a63…
+  [PASS] monday_analysis.xlsx 07cb0b2497c8… == 07cb0b2497c8…
+  [PASS] monday_driver_audit.xlsx 154bfde55ed6… == 154bfde55ed6…
+
+2. Source documents
+  [PASS] cover: Form 6-K of monday.com Ltd., month of November 2026
+  [PASS] cover lists Exhibit 99.1 (press release dated November 9, 2026)
+  [PASS] exhibit: results for the third quarter ended September 30, 2026
+  [PASS] statements: three months ended September 30, 2026 (first column) and 2025
+  [PASS] Q2 exhibit: saved-from URL in the header comment is https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm
+  [PASS] Q2 exhibit: Exhibit 99.1, "monday.com Announces Second Quarter 2026 Results", quarter ended June 30, 2026
+  [PASS] Q2 exhibit is a different file from the Q3 exhibit
+
+3. Cross-checks inside the filing (each actual tied to a second place)
+  [PASS] revenue 377,535k (statement) = $377.5 million (highlights)
+  [PASS] non-GAAP op. income: GAAP 31,187 + SBC 30,203 + foundation 18,000 + restructuring 9,962 = 89,352k
+  [PASS] non-GAAP op. income = non-GAAP GP 333,822 - R&D 69,984 - S&M 145,370 - G&A 29,116 (within $1k rounding)
+  [PASS] highlights: non-GAAP operating income $89.4 million, margin 24%
+  [PASS] margin 23.6672% rounds to the reported 24%
+  [PASS] FCF: OCF 20,396 - PP&E 4,159 - cap. software 432 = 15,805k
+  [PASS] adjusted FCF: FCF 15,805 + HQ 0 + restructuring payments 47,191 = 62,996k
+  [PASS] highlights: OCF $20.4 million, adjusted FCF $63.0 million
+  [PASS] cash at Sep 30: balance sheet 869,554 = cash flow statement end of period
+  [PASS] customers >$50k: 5,038 vs 3,993 a year earlier = +26% as stated
+  [PASS] Q2 exhibit: customers >$50k 4,834 at June 30, 2026 vs 3,702 a year earlier = +30.6%, stated +31%
+  [PASS] Q2 exhibit: revenue 364,621k (statement) = $364.6 million (headline)
+
+4. Tie-out of the filing's prior-year column to the locked plan (Historical_Drivers, Sourced)
+  [PASS] Q3 2025 revenue: filing 316,855 = plan 316,855
+  [PASS] Q3 2025 customers >$50k: filing 3,993 = plan 3,993
+  [PASS] Q3 2025 non-GAAP op. income: filing 47,484 = plan 47,484
+  [PASS] Q2 2026 customers >$50k: Q2 exhibit 4,834 = plan Historical_Drivers 4,834
+  [PASS] Q2 2025 customers >$50k: Q2 exhibit 3,702 = plan Historical_Drivers 3,702
+  [PASS] Q2 2026 revenue: Q2 exhibit 364,621 = plan Historical_Drivers 364,621
+  [PASS] Q2 2026 customers >$50k: Q2 exhibit 4,834 = locked source book Quarterly_Actuals QA-1426 4,834 (same sentence quoted, source ER-2026Q2)
+
+5. Q3 call scorecard (rule: within range if LOW <= actual <= HIGH, inclusive, actual as reported)
+  Revenue (USD m)                        actual   377.535  low 374.471  mid 378.382  high 382.350  vs mid -0.847 (-0.22%)  vs edge +0.000  -> INSIDE (hit)
+  Non-GAAP operating income (USD m)      actual    89.352  low 62.931  mid 69.637  high 72.754  vs mid +19.715 (+28.31%)  vs edge +16.598  -> ABOVE (miss)
+  All-customer NDR (reported whole %)    actual      1.08  low 1.07  mid 1.08  high 1.10  vs mid -0.005 (-0.46%)  vs edge +0.000  -> INSIDE (hit)
+  Paid customers >$50k ARR               actual      5038  low 5028  mid 5111  high 5128  vs mid -73.000 (-1.43%)  vs edge +0.000  -> INSIDE (hit)
+  Non-GAAP op. margin (derived; NOT scored) actual 0.2367  low 0.1681  mid 0.1840  high 0.1903  vs mid +0.0526 (+526 bps)
+  Adjusted FCF / cRPO                    NO CALL (recorded only): adjusted FCF as reported $62.996M; cRPO $759M
+
+6. Plan scorecard (Base; actual vs plan and difference; the plan sets no hit/miss bands)
+  Revenue Q3 2026, USD m                                 plan     378.3825  actual     377.5350  difference      -0.8475  (-0.22%)
+  Non-GAAP op. income Q3 2026, USD m                     plan      69.6370  actual      89.3520  difference     +19.7150  (+28.31%)
+  Non-GAAP op. margin Q3 2026                            plan       0.1840  actual       0.2367  difference      +0.0526  (+28.60%)
+  Adjusted FCF, reported basis (plan definition), USD m  plan      56.9095  actual      15.8050  difference     -41.1045  (-72.23%)
+  Adjusted FCF, guide basis, USD m                       plan      73.1595  actual      62.9960  difference     -10.1635  (-13.89%)
+  NDR (indicator)                                        plan       1.0850  actual       1.0800  difference      -0.0050  (-0.46%)
+  Customers >$50k ARR                                    plan    5110.5000  actual    5038.0000  difference     -72.5000  (-1.42%)
+  Cash + marketable securities Sep 30, USD m             plan    1123.2380  actual    1099.3940  difference     -23.8440  (-2.12%)
+
+7. Explaining the operating income difference (filing non-GAAP lines vs plan Base Q3, USD m)
+  gross profit  actual   333.822  plan   336.080  effect on operating income   -2.258
+  R&D           actual    69.984  plan    84.054  effect on operating income  +14.070
+  S&M           actual   145.370  plan   151.336  effect on operating income   +5.966
+  G&A           actual    29.116  plan    31.053  effect on operating income   +1.937
+  [PASS] line effects sum +19.715 = operating income difference +19.715 (within $2k rounding)
+  memo: SBC actual 30.203 vs plan 39.730; restructuring charges actual 9.962 vs plan 25.000; foundation contribution excluded 18.000
+  memo: operating income under a literal reading of the plan definition (2026 foundation contribution NOT excluded): 71.352 -> inside the call range (flagged, not used)
+
+8. Cash items
+  restructuring payments $47.191M (of which employee-related $32.0M, leases $15.2M per note 2) vs plan Q3 severance cash $16.25M
+  [PASS] note (2): $32.0M employee-related + $15.2M leases = restructuring payments
+  restructuring charges $9.962M (Q3) and $31.398M (nine months) vs plan Q3 $25.0M
+  Q3 FCF watch item: adjusted FCF (company) / revenue 16.7%, / non-GAAP op. income 0.71x; reported basis (plan definition) 4.2% and 0.18x  (prior Q3s: 29-34%, 1.9-2.7x)
+
+9. Triggers (all need two consecutive quarters; Q3 2026 is at most the first reading)
+  T1 Watch / Action: no Q3 2026 threshold (first thresholds Q4 2026: Watch 390.816, Action 389.987). Not applicable to Q3.
+     memo: Q3 revenue 377.535 vs Base path 378.382 (-0.22%); Downside path Q3 378.382 (same as Base in Q3)
+  T2: beat vs guidance midpoint 369.0 = +2.3130% vs threshold 1.4827% -> NOT below threshold (no first reading)
+  T3: net adds = Q3 count 5,038 - Q2 2026 count 4,834 (Q2 exhibit) = 204 vs threshold <= 194 -> NOT at or below threshold (no first reading; 10 above)
+  post-hoc memo (not a trigger): Q4 2026 revenue guide $380-382M, midpoint 381.0; Q4 Watch threshold 390.816 needs a +2.58% beat, Action 389.987 needs +2.36%
+  updated FY2026 guide: revenue $1,473-1,475M, non-GAAP op. income $268-270M, adjusted FCF $282-288M
+
+10. Portfolio results file (scoring/monday_q3_actuals.json), validated with the site's rules
+  [PASS] version 1, status scored
+  [PASS] retrieved_at 2026-11-10T18:38:00Z is after 2026-11-09T13:30:00Z
+  [PASS] revenue_usd_m 377.5 = 377.535 to 1 decimal
+  [PASS] non_gaap_operating_income_usd_m 89.4 = 89.352 to 1 decimal
+  [PASS] margin 0.237 = op. income / revenue within 0.05 pp
+  [PASS] NDR and customers match the filing
+  [PASS] t2 0.023 = revenue / 369.0 - 1 within 0.005 pp (site rule)
+  [PASS] t3_net_adds_customers_over_50k 204 is an integer >= 0 and = 5,038 - 4,834
+
+RESULT: 0 failed check(s)
