@@ -1,6 +1,6 @@
 # monday.com Q3 2026 scorecard
 
-The locked Q3 2026 call (`q3-2026-call-locked`, `monday_q3_call.xlsx`) and the locked operating plan (`plan-2026-locked`, `monday_plan.xlsx`), scored against the actual Q3 2026 results. Actuals and their sources are in `q3-2026-actuals.md`.
+The locked Q3 2026 call (`q3-2026-call-locked`, `monday_q3_call.xlsx`) and the locked operating plan (`plan-2026-locked`, `monday_plan.xlsx`), scored against the actual Q3 2026 results. Actuals and their sources are in `q3-2026-actuals.md`. Trigger T3 also uses the Q2 2026 Exhibit 99.1 (https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm) for the June 30, 2026 count of customers over $50k.
 
 - **Locked values:** every forecast value is read from its locked cell by `score_q3_2026.py`, and every variance below is recomputed there (output in `q3-2026-verification.txt`).
 - **Nothing in the locked files changed:** no threshold, range or definition was changed after seeing the results.
@@ -63,7 +63,7 @@ Every trigger fires only after **two consecutive quarters** (`Recommendation`). 
 | T1 Watch (revenue vs Base path) | First threshold is Q4 2026: $390.816M | No Q3 threshold. Q3 revenue was −0.22% against the Base path. | Not applicable to Q3 |
 | T1 Action (revenue vs Downside path) | First threshold is Q4 2026: $389.987M | No Q3 threshold. The Downside path equals Base in Q3 ($378.382M). | Not applicable to Q3 |
 | T2 (revenue beat vs guidance midpoint) | below 1.4827% | Beat vs the $369.0M midpoint (guide $368–370M): **+2.313%** | **Not** on the trigger side: no first reading |
-| T3 (net adds of customers > $50k) | at or below 194 | **Not found in the supplied documents.** Needs the Q2 2026 count, which these two files don't contain. | Not evaluated |
+| T3 (net adds of customers > $50k) | at or below 194 | 5,038 − 4,834 (June 30, 2026, from the Q2 2026 Exhibit 99.1) = **204** | **Not** on the trigger side, by 10: no first reading |
 
 **Which scenario:** neither. The Downside differs from Base only from Q4 2026, so Q3 cannot separate the two cases. Q3 revenue (−0.22% against both paths) fits either.
 
@@ -103,7 +103,7 @@ Every trigger fires only after **two consecutive quarters** (`Recommendation`). 
 2. **The adjusted FCF definition changed:** the company now adds back restructuring payments, while the plan's locked definition has no such add-back. Both bases are reported; the plan's reported-basis line uses the locked definition.
 3. **NDR basis:** the release defines NDR as "a weighted average ... for the four quarters ending with the most recent quarter". The plan says the "measurement basis [is] not disclosed". The reported 108% is scored as given.
 4. **Both locked workbooks still read "DRAFT":** the Q3 call's README reads "DRAFT, NOT LOCKED", and the plan's title says the same. Both are locked by their Releases and hashes, which match. The plan's README notes this.
-5. **T3 cannot be computed:** the supplied documents don't give the Q2 2026 count of customers over $50k.
+5. **T3's Q2 count comes from a second filing:** the Q3 documents don't give the June 30, 2026 count, so it was taken from the Q2 2026 Exhibit 99.1, supplied separately. It matches the locked source book (4,834), so the plan's input and the scored input are the same number. T3 cleared by only 10 customers (204 against at or below 194).
 
 ## 6. Post-hoc notes (for the next reforecast; they do not change the locked plan)
 

@@ -10,6 +10,9 @@
   [PASS] cover lists Exhibit 99.1 (press release dated November 9, 2026)
   [PASS] exhibit: results for the third quarter ended September 30, 2026
   [PASS] statements: three months ended September 30, 2026 (first column) and 2025
+  [PASS] Q2 exhibit: saved-from URL in the header comment is https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm
+  [PASS] Q2 exhibit: Exhibit 99.1, "monday.com Announces Second Quarter 2026 Results", quarter ended June 30, 2026
+  [PASS] Q2 exhibit is a different file from the Q3 exhibit
 
 3. Cross-checks inside the filing (each actual tied to a second place)
   [PASS] revenue 377,535k (statement) = $377.5 million (highlights)
@@ -22,11 +25,17 @@
   [PASS] highlights: OCF $20.4 million, adjusted FCF $63.0 million
   [PASS] cash at Sep 30: balance sheet 869,554 = cash flow statement end of period
   [PASS] customers >$50k: 5,038 vs 3,993 a year earlier = +26% as stated
+  [PASS] Q2 exhibit: customers >$50k 4,834 at June 30, 2026 vs 3,702 a year earlier = +30.6%, stated +31%
+  [PASS] Q2 exhibit: revenue 364,621k (statement) = $364.6 million (headline)
 
 4. Tie-out of the filing's prior-year column to the locked plan (Historical_Drivers, Sourced)
   [PASS] Q3 2025 revenue: filing 316,855 = plan 316,855
   [PASS] Q3 2025 customers >$50k: filing 3,993 = plan 3,993
   [PASS] Q3 2025 non-GAAP op. income: filing 47,484 = plan 47,484
+  [PASS] Q2 2026 customers >$50k: Q2 exhibit 4,834 = plan Historical_Drivers 4,834
+  [PASS] Q2 2025 customers >$50k: Q2 exhibit 3,702 = plan Historical_Drivers 3,702
+  [PASS] Q2 2026 revenue: Q2 exhibit 364,621 = plan Historical_Drivers 364,621
+  [PASS] Q2 2026 customers >$50k: Q2 exhibit 4,834 = locked source book Quarterly_Actuals QA-1426 4,834 (same sentence quoted, source ER-2026Q2)
 
 5. Q3 call scorecard (rule: within range if LOW <= actual <= HIGH, inclusive, actual as reported)
   Revenue (USD m)                        actual   377.535  low 374.471  mid 378.382  high 382.350  vs mid -0.847 (-0.22%)  vs edge +0.000  -> INSIDE (hit)
@@ -65,7 +74,7 @@
   T1 Watch / Action: no Q3 2026 threshold (first thresholds Q4 2026: Watch 390.816, Action 389.987). Not applicable to Q3.
      memo: Q3 revenue 377.535 vs Base path 378.382 (-0.22%); Downside path Q3 378.382 (same as Base in Q3)
   T2: beat vs guidance midpoint 369.0 = +2.3130% vs threshold 1.4827% -> NOT below threshold (no first reading)
-  T3: net adds = Q3 count 5,038 - Q2 2026 count: Q2 2026 count NOT FOUND in the supplied documents -> T3 not evaluated
+  T3: net adds = Q3 count 5,038 - Q2 2026 count 4,834 (Q2 exhibit) = 204 vs threshold <= 194 -> NOT at or below threshold (no first reading; 10 above)
   post-hoc memo (not a trigger): Q4 2026 revenue guide $380-382M, midpoint 381.0; Q4 Watch threshold 390.816 needs a +2.58% beat, Action 389.987 needs +2.36%
   updated FY2026 guide: revenue $1,473-1,475M, non-GAAP op. income $268-270M, adjusted FCF $282-288M
 
@@ -77,6 +86,6 @@
   [PASS] margin 0.237 = op. income / revenue within 0.05 pp
   [PASS] NDR and customers match the filing
   [PASS] t2 0.023 = revenue / 369.0 - 1 within 0.005 pp (site rule)
-  t3_net_adds_customers_over_50k = None: the site requires a number; NOT FOUND in the supplied documents, so the file does not yet validate.
+  [PASS] t3_net_adds_customers_over_50k 204 is an integer >= 0 and = 5,038 - 4,834
 
 RESULT: 0 failed check(s)

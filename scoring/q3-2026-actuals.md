@@ -4,14 +4,15 @@ Actual results for the quarter ended **September 30, 2026** (fiscal Q3 2026), fo
 
 ## Source
 
-The only source is the Q3 2026 Form 6-K and its Exhibit 99.1, saved from SEC EDGAR by the repository owner on November 10, 2026 (about 18:38 UTC). Copies are in `scoring/sources/`.
+The Q3 actuals come only from the Q3 2026 Form 6-K and its Exhibit 99.1, saved from SEC EDGAR by the repository owner on November 10, 2026 (about 18:38 UTC). The one input trigger T3 also needs, the June 30, 2026 count of customers over $50k, comes only from the Q2 2026 Form 6-K's Exhibit 99.1, saved from SEC EDGAR by the repository owner on November 10, 2026. Copies of all three files are in `scoring/sources/`.
 
 | Document | EDGAR URL |
 |---|---|
 | Form 6-K cover, "For the month of November 2026" | https://www.sec.gov/Archives/edgar/data/1845338/000117891326005085/zk2636355.htm |
 | Exhibit 99.1, press release "monday.com Announces Third Quarter 2026 Results", dated November 9, 2026 | https://www.sec.gov/Archives/edgar/data/1845338/000117891326005085/exhibit_99-1.htm |
+| Q2 2026 Form 6-K, Exhibit 99.1, press release "monday.com Announces Second Quarter 2026 Results", dated August 10, 2026 (copy: `scoring/sources/q2-2026-exhibit-99-1.htm`) | https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm |
 
-- **Filing:** accession 0001178913-26-005085, filed November 9, 2026.
+- **Filings:** Q3: accession 0001178913-26-005085, filed November 9, 2026. Q2: accession 0001178913-26-003971, filed August 10, 2026 (used only for the June 30, 2026 count of customers over $50k).
 - **No other sources:** no memory, news or third-party data.
 - **Script:** every value below is read from the exhibit by `scoring/score_q3_2026.py`, not typed, and cross-checked as shown.
 
@@ -35,7 +36,8 @@ Statement figures are USD thousands, converted to USD millions. Each figure is c
 | Current RPO | **$759M** | Recent business highlights | — (recorded only; no call) |
 | Updated FY2026 outlook | Revenue $1,473–1,475M; non-GAAP operating income $268–270M; adjusted FCF $282–288M | Financial outlook | — |
 | Q4 2026 outlook | Revenue $380–382M; non-GAAP operating income $68–70M | Financial outlook | — |
-| Q2 2026 count of customers > $50k (needed for trigger T3) | **Not found in the supplied documents** | The release gives Q3 2026 and Q3 2025 only. | — |
+| Q2 2026 count of customers > $50k (needed for trigger T3) | **4,834** (June 30, 2026) | **Q2 2026** Exhibit 99.1, Recent business highlights: "The number of paid customers with more than $50,000 in ARR was 4,834, up 31% from 3,702 as of June 30, 2025." | 4,834 / 3,702 − 1 = 30.6%, the stated "up 31%" ✓. Matches the locked source book (`monday_sourcebook.xlsx`, `Quarterly_Actuals` row QA-1426: 4,834, quoting the same sentence) and the locked plan (`Historical_Drivers`, Q2 2026: 4,834) ✓ |
+| Q3 2026 net adds of customers > $50k (trigger T3) | **204** | 5,038 (Q3 exhibit) − 4,834 (Q2 exhibit) | — |
 | New share repurchase authorization | **Not found in the supplied documents** | No authorization is announced. The cash flow statement shows no Q3 repurchases (nine months: 734,971). | — |
 
 ## Tie-out to the locked plan
@@ -47,6 +49,8 @@ The filing's Q3 2025 comparatives match the locked plan's sourced history (`Hist
 | Revenue | 316,855 | 316,855 ✓ |
 | Non-GAAP operating income | 47,484 | 47,484 ✓ |
 | Customers > $50k | 3,993 | 3,993 ✓ |
+
+The Q2 exhibit also ties: Q2 2026 revenue 364,621, customers > $50k 4,834, and Q2 2025 customers > $50k 3,702 all equal the plan's `Historical_Drivers`.
 
 The units and the fiscal period line up with the plan.
 

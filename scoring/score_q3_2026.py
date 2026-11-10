@@ -12,6 +12,11 @@ fails if a value cannot be found or a cross-check does not tie.
 Sources (saved from SEC EDGAR on 2026-11-10 by the repository owner):
   https://www.sec.gov/Archives/edgar/data/1845338/000117891326005085/zk2636355.htm
   https://www.sec.gov/Archives/edgar/data/1845338/000117891326005085/exhibit_99-1.htm
+
+Trigger T3 also needs the June 30, 2026 count of customers over $50k. It is read only from the
+Q2 2026 Form 6-K's Exhibit 99.1 (accession 0001178913-26-003971, filed August 10, 2026), saved
+from SEC EDGAR on 2026-11-10 by the repository owner (scoring/sources/q2-2026-exhibit-99-1.htm):
+  https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm
 """
 from __future__ import annotations
 
@@ -27,6 +32,8 @@ import openpyxl
 ROOT = Path(__file__).resolve().parent.parent
 EXHIBIT = ROOT / "scoring" / "sources" / "exhibit_99-1.htm"
 COVER = ROOT / "scoring" / "sources" / "zk2636355.htm"
+Q2_EXHIBIT = ROOT / "scoring" / "sources" / "q2-2026-exhibit-99-1.htm"
+Q2_URL = "https://www.sec.gov/Archives/edgar/data/1845338/000117891326003971/exhibit_99-1.htm"
 LOCKED = {
     "monday_q3_call.xlsx": "49463d1fbb678fd26b59c3c81e70cb52613a4a73906b846bcaaf034be76bb722",
     "monday_plan.xlsx": "125af68742c9d3501cd2f23944899cc4625cf5285e79ba9ea2bee34f24315419",
@@ -101,6 +108,13 @@ check("monday.com Ltd." in cover and "For the month of November 2026" in cover, 
 check("Exhibit 99.1" in cover and "exhibit_99-1.htm" in COVER.read_text("cp1252", errors="replace"), "cover lists Exhibit 99.1 (press release dated November 9, 2026)")
 check("third quarter ended September 30, 2026" in prose, "exhibit: results for the third quarter ended September 30, 2026")
 check("Three months ended September 30," in ex, "statements: three months ended September 30, 2026 (first column) and 2025")
+q2_ex = to_lines(Q2_EXHIBIT)
+q2_prose = re.sub(r"\s+", " ", re.sub(r"[●|]", " ", " ".join(q2_ex)))
+q2_head = Q2_EXHIBIT.read_bytes()[:1000].decode("cp1252", errors="replace")
+check(Q2_URL in q2_head, f"Q2 exhibit: saved-from URL in the header comment is {Q2_URL}")
+check("EX-99.1" in q2_head and "Second Quarter 2026 Results" in q2_prose and "second quarter ended June 30, 2026" in q2_prose,
+      "Q2 exhibit: Exhibit 99.1, \"monday.com Announces Second Quarter 2026 Results\", quarter ended June 30, 2026")
+check(sha256(Q2_EXHIBIT) != sha256(EXHIBIT), "Q2 exhibit is a different file from the Q3 exhibit")
 
 # --- 3. Actuals (USD thousands from the statements; Q3 2026 is column 1, Q3 2025 column 2) ----
 OPS = "CONDENSED"  # first statement header
@@ -139,7 +153,14 @@ fy_rev = sentence(r"full year 2026, monday.com currently expects: Total revenue 
 fy_oi = sentence(r"Non-GAAP operating income of \$(\d+) million to \$(\d+) million and operating margin of approximately 18%, assuming a negative FX impact of 100 to 200 basis points. Adjusted")
 fy_fcf = sentence(r"Adjusted free cash flow of \$(\d+) million to \$(\d+) million")
 q4_rev = sentence(r"fourth quarter of fiscal year 2026, monday.com currently expects: Total revenue of \$(\d+) million to \$(\d+) million")
-q2_count = re.search(r"\$50,000 in ARR was [\d,]+, up \d+% from [\d,]+ as of June 30, 2026", prose)
+# T3 input, from the Q2 2026 exhibit only:
+q2_c50 = re.search(r"number of paid customers with more than \$50,000 in ARR was ([\d,]+), up (\d+)% from ([\d,]+) as of June 30, 2025", q2_prose)
+if not q2_c50:
+    raise ValueError("Q2 2026 count of customers over $50k: not found in the supplied documents")
+q2_count = int(q2_c50.group(1).replace(",", ""))
+q2_count_py = int(q2_c50.group(3).replace(",", ""))
+i = q2_ex.index("Revenue")
+q2_rev = [float(v.replace(",", "")) for v in q2_ex[i + 1:i + 8] if re.fullmatch(r"[\d,]+", v)][:2]  # Q2 2026, Q2 2025 (USD thousands)
 
 A = {
     "revenue": rev[0] / 1000,
@@ -165,6 +186,9 @@ check(fcf[0] + hq[0] + rpay[0] == afcf[0], f"adjusted FCF: FCF {fcf[0]:,.0f} + H
 check("$63.0 million of adjusted free cash flow" in prose and "Net cash provided by operating activities was $20.4 million" in prose, "highlights: OCF $20.4 million, adjusted FCF $63.0 million")
 check(table_row("CASH AND CASH EQUIVALENTS - End of period", n=1)[0] == cash[0], f"cash at Sep 30: balance sheet {cash[0]:,.0f} = cash flow statement end of period")
 check(abs(int(c50.group(1).replace(",", "")) / int(c50.group(3).replace(",", "")) - 1 - int(c50.group(2)) / 100) < 0.005, f"customers >$50k: {c50.group(1)} vs {c50.group(3)} a year earlier = +{c50.group(2)}% as stated")
+check(abs(q2_count / q2_count_py - 1 - int(q2_c50.group(2)) / 100) < 0.005,
+      f"Q2 exhibit: customers >$50k {q2_count:,} at June 30, 2026 vs {q2_count_py:,} a year earlier = {q2_count / q2_count_py - 1:+.1%}, stated +{q2_c50.group(2)}%")
+check(abs(q2_rev[0] - 364_600) < 50 and "Second quarter revenue of $364.6 million" in q2_prose, f"Q2 exhibit: revenue {q2_rev[0]:,.0f}k (statement) = $364.6 million (headline)")
 
 print("\n4. Tie-out of the filing's prior-year column to the locked plan (Historical_Drivers, Sourced)")
 call = openpyxl.load_workbook(ROOT / "monday_q3_call.xlsx", data_only=True, read_only=True)
@@ -178,6 +202,16 @@ check(hd_rows["Customers >$50k ARR"][q325] == int(c50.group(3).replace(",", ""))
 ngoi_row = next((r for k, r in hd_rows.items() if str(k).startswith("Operating income (non-GAAP)")), None)
 if ngoi_row is not None:
     check(ngoi_row[q325] == ngoi[1], f"Q3 2025 non-GAAP op. income: filing {ngoi[1]:,.0f} = plan {ngoi_row[q325]:,.0f}")
+q226, q225 = list(hdr).index("Q2 2026"), list(hdr).index("Q2 2025")
+check(hd_rows["Customers >$50k ARR"][q226] == q2_count, f"Q2 2026 customers >$50k: Q2 exhibit {q2_count:,} = plan Historical_Drivers {hd_rows['Customers >$50k ARR'][q226]:,}")
+check(hd_rows["Customers >$50k ARR"][q225] == q2_count_py, f"Q2 2025 customers >$50k: Q2 exhibit {q2_count_py:,} = plan Historical_Drivers {hd_rows['Customers >$50k ARR'][q225]:,}")
+check(hd_rows["Revenue"][q226] == q2_rev[0], f"Q2 2026 revenue: Q2 exhibit {q2_rev[0]:,.0f} = plan Historical_Drivers {hd_rows['Revenue'][q226]:,.0f}")
+sb = openpyxl.load_workbook(ROOT / "monday_sourcebook.xlsx", data_only=True, read_only=True)
+sb_rows = {r[0]: r for r in sb["Quarterly_Actuals"].iter_rows(values_only=True) if r and r[0]}
+sb_q2 = sb_rows["QA-1426"]
+check(sb_q2[1] == "Q2 2026" and sb_q2[5] == "Paid customers with more than $50,000 in ARR" and sb_q2[7] == q2_count
+      and q2_c50.group(0).replace("number", "The number", 1) in sb_q2[13],
+      f"Q2 2026 customers >$50k: Q2 exhibit {q2_count:,} = locked source book Quarterly_Actuals QA-1426 {sb_q2[7]:,} (same sentence quoted, source ER-2026Q2)")
 
 # --- 5. Locked values (read from their cells) ------------------------------------------------
 sc = call["Scorecard"]
@@ -240,8 +274,9 @@ beat = A["revenue"] / guide_mid - 1
 print(f"  T1 Watch / Action: no Q3 2026 threshold (first thresholds Q4 2026: Watch {T['t1_watch_q4']:.3f}, Action {T['t1_action_q4']:.3f}). Not applicable to Q3.")
 print(f"     memo: Q3 revenue {A['revenue']:.3f} vs Base path {P['revenue']:.3f} ({A['revenue'] / P['revenue'] - 1:+.2%}); Downside path Q3 {P['downside_rev_q3']:.3f} (same as Base in Q3)")
 print(f"  T2: beat vs guidance midpoint {guide_mid:.1f} = {beat:+.4%} vs threshold {T['t2']:.4%} -> {'BELOW threshold (first reading on the trigger side)' if beat < T['t2'] else 'NOT below threshold (no first reading)'}")
-print(f"  T3: net adds = Q3 count {A['c50']:,} - Q2 2026 count: "
-      + ("found" if q2_count else "Q2 2026 count NOT FOUND in the supplied documents -> T3 not evaluated"))
+t3 = A["c50"] - q2_count
+print(f"  T3: net adds = Q3 count {A['c50']:,} - Q2 2026 count {q2_count:,} (Q2 exhibit) = {t3:,} vs threshold <= {T['t3']:,} -> "
+      + ("AT OR BELOW threshold (first reading on the trigger side)" if t3 <= T["t3"] else f"NOT at or below threshold (no first reading; {t3 - T['t3']} above)"))
 q4m = (int(q4_rev.group(1)) + int(q4_rev.group(2))) / 2
 print(f"  post-hoc memo (not a trigger): Q4 2026 revenue guide ${q4_rev.group(1)}-{q4_rev.group(2)}M, midpoint {q4m:.1f}; Q4 Watch threshold {T['t1_watch_q4']:.3f} needs a "
       f"{T['t1_watch_q4'] / q4m - 1:+.2%} beat, Action {T['t1_action_q4']:.3f} needs {T['t1_action_q4'] / q4m - 1:+.2%}")
@@ -258,7 +293,8 @@ check(a["non_gaap_operating_income_usd_m"] == round(A["ngoi"], 1), f"non_gaap_op
 check(abs(a["non_gaap_operating_margin"] - a["non_gaap_operating_income_usd_m"] / a["revenue_usd_m"]) <= 0.0005, f"margin {a['non_gaap_operating_margin']} = op. income / revenue within 0.05 pp")
 check(a["net_dollar_retention"] == A["ndr"] and a["customers_over_50k_arr"] == A["c50"], "NDR and customers match the filing")
 check(abs(t["t2_revenue_beat_vs_guidance_mid"] - (a["revenue_usd_m"] / guide_mid - 1)) <= 0.00005, f"t2 {t['t2_revenue_beat_vs_guidance_mid']} = revenue / {guide_mid} - 1 within 0.005 pp (site rule)")
-print(f"  t3_net_adds_customers_over_50k = {t['t3_net_adds_customers_over_50k']!r}: the site requires a number; NOT FOUND in the supplied documents, so the file does not yet validate.")
+v3 = t["t3_net_adds_customers_over_50k"]
+check(isinstance(v3, int) and not isinstance(v3, bool) and v3 >= 0 and v3 == t3, f"t3_net_adds_customers_over_50k {v3!r} is an integer >= 0 and = {A['c50']:,} - {q2_count:,}")
 
 print(f"\nRESULT: {len(failures)} failed check(s)" + (": " + "; ".join(failures) if failures else ""))
 sys.exit(1 if failures else 0)
