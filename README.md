@@ -2,13 +2,13 @@
 
 An outside-in operating plan for monday.com, built only from public SEC filings. It was fixed before the company reported Q3 2026 results on November 9, 2026.
 
-**Information cutoff:** October 28, 2026. No data published after that date is used.
+**Information cutoff:** October 28, 2026. No data published after that date is used in the workbooks. The Q3 2026 scoring in `scoring/` uses the Q3 2026 Form 6-K filed November 9, 2026.
 
 ## Management question
 
 If growth decelerates faster than guided after the July 2026 restructuring, how should management adjust hiring and operating spend to protect margin and cash generation without damaging long-term growth?
 
-## Summary of results
+## Summary of the locked forecasts
 
 From the `Executive_Summary` sheet of `monday_plan.xlsx`, in USD millions. FCF means adjusted free cash flow.
 
@@ -28,7 +28,7 @@ The Downside assumes growth decelerates faster (2.6 points a year instead of 1.3
 | `monday_analysis.xlsx` | Historical analysis: guidance accuracy, growth decomposition, margin structure, cash conversion and deceleration. |
 | `monday_q3_call.xlsx` | Pre-registered call for Q3 2026 (low / mid / high) on revenue, operating income, margin, net dollar retention and customers above $50K ARR. |
 | `monday_driver_audit.xlsx` | Evidence audit for the plan's drivers, including the backtest used to choose the revenue method. |
-| `monday_plan.xlsx` | The operating plan: Base and Downside cases for Q3 2026 to Q4 2027, cash bridge, management-response breakevens, trigger metrics, checks and a blank Scorecard. |
+| `monday_plan.xlsx` | The operating plan: Base and Downside cases for Q3 2026 to Q4 2027, cash bridge, management-response breakevens, trigger metrics, checks and a `Scorecard` left blank at the lock (the Q3 2026 scoring is in `scoring/`). |
 
 `PHASE3_DESIGN.md` is the design brief for the plan.
 
@@ -47,7 +47,7 @@ The `Executive_Summary` title still reads "DRAFT, not locked". The file was lock
 
 ## Pre-registration and locks
 
-Two GitHub Releases lock the forecasts before the results are known. Each lists the SHA-256 hash of its files, so anyone can confirm the file has not changed since.
+Two GitHub Releases locked the forecasts on October 28 and 29, 2026, before the Q3 2026 results were known. Each lists the SHA-256 hash of its files, so anyone can confirm the file has not changed since.
 
 | Release (tag) | Published (GitHub, UTC) | Commit | Locks |
 |---|---|---|---|
@@ -74,11 +74,31 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/2samfelix/monday-opera
 Get-FileHash .\monday_plan.xlsx -Algorithm SHA256
 ```
 
-## Scoring plan for November 9, 2026
+## Q3 2026 results
 
-- The trigger thresholds were fixed on the lock date. The Q3 2026 results will not be used to change them.
-- After the results, the actuals go into the `Scorecard` sheets, in a new commit and a new file version. The locked files and Releases are never edited.
-- The `Scorecard` in `monday_plan.xlsx` also lists the items to check on November 9. One example is whether the FY2026 FCF guide excludes restructuring costs: the August 10, 2026 filing does not say.
+monday.com reported Q3 2026 results on November 9, 2026. They were scored against the locked call (`q3-2026-call-locked`) and the locked plan (`plan-2026-locked`).
+
+- **Score:** 3 of 4 scored calls landed inside their locked ranges. Revenue was $377.535M, against a range of $374.471M to $382.350M. All-customer NDR was 108%, against 107% to 110%. Paid customers above $50K ARR were 5,038, against 5,028 to 5,128.
+- **The miss:** non-GAAP operating income was $89.352M, above the $62.931M to $72.754M range by $16.598M. It is published as a miss.
+- **Triggers:** no trigger fired. None could have fired on Q3 alone, because each needs two consecutive quarters.
+  - T2: the beat against the guidance midpoint was +2.313%, against a threshold of below 1.4827% (the portfolio site shows +2.30% and 1.48%, computed from the rounded $377.5M revenue).
+  - T3: net adds of customers above $50K ARR were 204, against a threshold of at or below 194.
+
+Details:
+
+- [`scoring/q3-2026-scorecard.md`](scoring/q3-2026-scorecard.md): the scorecard, with the misses explained and the ambiguities flagged.
+- [`scoring/q3-2026-actuals.md`](scoring/q3-2026-actuals.md): the actuals and where each one is in the filing.
+- [`scoring/q3-2026-verification.txt`](scoring/q3-2026-verification.txt): the script's checks and recomputed variances.
+
+## How Q3 2026 was scored
+
+- The trigger thresholds were fixed on the lock date. The Q3 2026 results were not used to change them.
+- After the results, the actuals were recorded in [`scoring/`](scoring/), not in the workbooks' `Scorecard` sheets:
+  - [`scoring/monday_q3_actuals.json`](scoring/monday_q3_actuals.json) holds the actuals.
+  - The `scoring/*.md` files hold the actuals and the scorecard.
+  - [`scoring/score_q3_2026.py`](scoring/score_q3_2026.py) reads every value and recomputes every variance.
+- The locked files and Releases were not edited.
+- The `Scorecard` in `monday_plan.xlsx` also listed the items to check on November 9. The answers are in section 2 of the scorecard. For example, the FY2026 adjusted FCF guide does exclude restructuring by the release's own definition, though the outlook bullet itself does not restate the exclusion.
 
 ## Labels
 
@@ -94,7 +114,13 @@ Every number in the workbooks carries one of three labels:
 - It is not guidance. The Base case is a beat-adjusted central estimate and sits above the top of the FY2026 guided ranges for revenue and operating income.
 - The cost in lost growth of cutting spend cannot be measured from public data. The plan shows breakeven revenue losses instead of predicting that cost.
 - Forecast accuracy drops beyond two quarters ahead. Q3 and Q4 2027 lie beyond the tested horizon.
-- Open items are listed in the workbook: whether the FY2026 FCF guide excludes restructuring, the timing of Q3 2026 severance payments, and the guidance-beat trigger, which has never fired.
+- Open items listed in the workbook at the lock:
+  - **Answered by the Q3 2026 results** (scorecard, section 2):
+    - The FY2026 adjusted FCF guide does exclude restructuring, by the company's definition.
+    - Restructuring payments in Q3 2026 were $47.2M: $32.0M employee-related and $15.2M for exiting leased offices. The plan assumed $16.25M of severance cash.
+  - **Still open:**
+    - The guidance-beat trigger (T2) has never fired, and Q3 2026 was not on the trigger side.
+    - The revenue trigger's (T1) first thresholds are in Q4 2026, so it has no reading yet.
 
 ## Data sources
 
