@@ -8,7 +8,7 @@ An outside-in operating plan for monday.com, built only from public SEC filings.
 
 If growth decelerates faster than guided after the July 2026 restructuring, how should management adjust hiring and operating spend to protect margin and cash generation without damaging long-term growth?
 
-## Summary of results
+## Summary of the locked forecasts
 
 From the `Executive_Summary` sheet of `monday_plan.xlsx`, in USD millions. FCF means adjusted free cash flow.
 
@@ -81,7 +81,7 @@ monday.com reported Q3 2026 results on November 9, 2026. They were scored agains
 - **Score:** 3 of 4 scored calls landed inside their locked ranges. Revenue was $377.535M, against a range of $374.471M to $382.350M. All-customer NDR was 108%, against 107% to 110%. Paid customers above $50K ARR were 5,038, against 5,028 to 5,128.
 - **The miss:** non-GAAP operating income was $89.352M, above the $62.931M to $72.754M range by $16.598M. It is published as a miss.
 - **Triggers:** no trigger fired. None could have fired on Q3 alone, because each needs two consecutive quarters.
-  - T2: the beat against the guidance midpoint was +2.313%, against a threshold of below 1.4827%.
+  - T2: the beat against the guidance midpoint was +2.313%, against a threshold of below 1.4827% (the portfolio site shows +2.30% and 1.48%, computed from the rounded $377.5M revenue).
   - T3: net adds of customers above $50K ARR were 204, against a threshold of at or below 194.
 
 Details:
